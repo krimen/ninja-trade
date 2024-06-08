@@ -73,11 +73,13 @@ namespace NinjaTrader.NinjaScript.Indicators.Customs
 				NinjaTrader.Gui.Tools.SimpleFont fontOpenText = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Bold = true };
 				//Draw.TextFixed(this, "OpenOfDayPrice", "Open = " + openOfDay, TextPosition.TopRight, PriceColor, font, Brushes.Transparent, Brushes.Transparent, 1);
 				
-				Draw.HorizontalLine(this, "OpenOfDayLine", currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
+				//Draw.HorizontalLine(this, "OpenOfDayLine", currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
+				Draw.Line(this, "OpenOfDayLine", false, 0, currentBar.Open, -100, currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
 				
 				if(ShowLabelOpen) 
 				{
-					Draw.Text(this, "OpenOfDayLabel", true, "Open", -3, currentBar.Open, 10, LabelColor, fontOpenText, TextAlignment.Center, null, null, 1);
+					//Draw.Text(this, "OpenOfDayLabel", true, "Open", -3, currentBar.Open, 10, LabelColor, fontOpenText, TextAlignment.Center, null, null, 1);
+					Draw.TextFixed(this, "OpenOfDayPrice", "Open = " + openOfDay, TextPosition.TopRight, PriceColor, font, Brushes.Transparent, Brushes.Transparent, 1);
 				}
 			}
 		}

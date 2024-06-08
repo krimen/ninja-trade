@@ -195,7 +195,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Customs
 				else 
 				{
 					++_barCntr;
-					Print("Barra (" + _barCntr + ") das : " + Time[0].ToString());
+					//Print("Barra (" + _barCntr + ") das : " + Time[0].ToString());
 				}
 				
 				if (_barCntr < 2) return;
