@@ -68,6 +68,7 @@ namespace NinjaTrader.NinjaScript.Indicators.Customs
 				HighWidth 									= LowWidth;
 				Lod											= 0;
 				Hod											= 0;
+				ShowFrequencyMarket							= true;
 				PrintTo = PrintTo.OutputTab1;
 			}
 			else if (State == State.Configure)
@@ -105,22 +106,27 @@ namespace NinjaTrader.NinjaScript.Indicators.Customs
 			
 			if(currentLow == Lod || currentHigh == Hod) 
 			{
-				NinjaTrader.Gui.Tools.SimpleFont font = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Bold = true };
-				
-				double range  	  = (Hod - Lod);
-				double frenquency = (range*0.10);
-				double scalping   = frenquency / 2;
-				double goal 	  = range * 0.30;
-				string lowLabel   = $"Low = {Lod}\n" ;
-				string highLabel  = $"High = {Hod}\n";
-				string rangeLabel = $"Range = {range}\n";
-				string frenquencyLabel = $"Frequency = {frenquency.ToString("#.##")}\n";
-				string goalScalping = $"Scalp Value = {scalping.ToString("#.##")}\n";
-				string goalofDay = $"Goal of day = {goal.ToString("#.##")}";
-				
-				string labelCompleted = lowLabel + highLabel + rangeLabel + frenquencyLabel + goalScalping + goalofDay;
-				
-				Draw.TextFixed(this, "RangeLabel", labelCompleted, TextPosition.TopRight, Brushes.Green, font, Brushes.Transparent, Brushes.Transparent, 1);
+				if (ShowFrequencyMarket)
+				{
+
+					NinjaTrader.Gui.Tools.SimpleFont font = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Bold = true };
+
+					double range = (Hod - Lod);
+					double frenquency = (range * 0.10);
+					double scalping = frenquency / 2;
+					double goal = range * 0.30;
+					string lowLabel = $"Low = {Lod}\n";
+					string highLabel = $"High = {Hod}\n";
+					string rangeLabel = $"Range = {range}\n";
+					string frenquencyLabel = $"Frequency = {frenquency.ToString("#.##")}\n";
+					string goalScalping = $"Scalp Value = {scalping.ToString("#.##")}\n";
+					string goalofDay = $"Goal of day = {goal.ToString("#.##")}";
+
+					string labelCompleted = lowLabel + highLabel + rangeLabel + frenquencyLabel + goalScalping + goalofDay;
+
+					Draw.TextFixed(this, "RangeLabel", labelCompleted, TextPosition.TopRight, Brushes.Green, font, Brushes.Transparent, Brushes.Transparent, 1);
+
+				}
 			}
 			
 
@@ -185,6 +191,17 @@ namespace NinjaTrader.NinjaScript.Indicators.Customs
 			get;
 			set;
 		}
+
+		[NinjaScriptProperty]
+		[XmlIgnore]
+		[Display(Name = "Show Frequency Market", Description = "Show Frenquency Market on Chart", Order = 5, GroupName = "Width")]
+		public bool ShowFrequencyMarket
+		{
+			get;
+			set;
+		}
+
+
 		#endregion
 	}
 }
@@ -196,18 +213,18 @@ namespace NinjaTrader.NinjaScript.Indicators
 	public partial class Indicator : NinjaTrader.Gui.NinjaScript.IndicatorRenderBase
 	{
 		private Customs.LodHod[] cacheLodHod;
-		public Customs.LodHod LodHod(Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth)
+		public Customs.LodHod LodHod(Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth, bool showFrequencyMarket)
 		{
-			return LodHod(Input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth);
+			return LodHod(Input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth, showFrequencyMarket);
 		}
 
-		public Customs.LodHod LodHod(ISeries<double> input, Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth)
+		public Customs.LodHod LodHod(ISeries<double> input, Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth, bool showFrequencyMarket)
 		{
 			if (cacheLodHod != null)
 				for (int idx = 0; idx < cacheLodHod.Length; idx++)
-					if (cacheLodHod[idx] != null && cacheLodHod[idx].LodHorizontalLineColor == lodHorizontalLineColor && cacheLodHod[idx].HodHorizontalLineColor == hodHorizontalLineColor && cacheLodHod[idx].LowHorizontalDashStyle == lowHorizontalDashStyle && cacheLodHod[idx].HighHorizontalDashStyle == highHorizontalDashStyle && cacheLodHod[idx].LowWidth == lowWidth && cacheLodHod[idx].HighWidth == highWidth && cacheLodHod[idx].EqualsInput(input))
+					if (cacheLodHod[idx] != null && cacheLodHod[idx].LodHorizontalLineColor == lodHorizontalLineColor && cacheLodHod[idx].HodHorizontalLineColor == hodHorizontalLineColor && cacheLodHod[idx].LowHorizontalDashStyle == lowHorizontalDashStyle && cacheLodHod[idx].HighHorizontalDashStyle == highHorizontalDashStyle && cacheLodHod[idx].LowWidth == lowWidth && cacheLodHod[idx].HighWidth == highWidth && cacheLodHod[idx].ShowFrequencyMarket == showFrequencyMarket && cacheLodHod[idx].EqualsInput(input))
 						return cacheLodHod[idx];
-			return CacheIndicator<Customs.LodHod>(new Customs.LodHod(){ LodHorizontalLineColor = lodHorizontalLineColor, HodHorizontalLineColor = hodHorizontalLineColor, LowHorizontalDashStyle = lowHorizontalDashStyle, HighHorizontalDashStyle = highHorizontalDashStyle, LowWidth = lowWidth, HighWidth = highWidth }, input, ref cacheLodHod);
+			return CacheIndicator<Customs.LodHod>(new Customs.LodHod(){ LodHorizontalLineColor = lodHorizontalLineColor, HodHorizontalLineColor = hodHorizontalLineColor, LowHorizontalDashStyle = lowHorizontalDashStyle, HighHorizontalDashStyle = highHorizontalDashStyle, LowWidth = lowWidth, HighWidth = highWidth, ShowFrequencyMarket = showFrequencyMarket }, input, ref cacheLodHod);
 		}
 	}
 }
@@ -216,14 +233,14 @@ namespace NinjaTrader.NinjaScript.MarketAnalyzerColumns
 {
 	public partial class MarketAnalyzerColumn : MarketAnalyzerColumnBase
 	{
-		public Indicators.Customs.LodHod LodHod(Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth)
+		public Indicators.Customs.LodHod LodHod(Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth, bool showFrequencyMarket)
 		{
-			return indicator.LodHod(Input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth);
+			return indicator.LodHod(Input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth, showFrequencyMarket);
 		}
 
-		public Indicators.Customs.LodHod LodHod(ISeries<double> input , Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth)
+		public Indicators.Customs.LodHod LodHod(ISeries<double> input , Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth, bool showFrequencyMarket)
 		{
-			return indicator.LodHod(input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth);
+			return indicator.LodHod(input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth, showFrequencyMarket);
 		}
 	}
 }
@@ -232,14 +249,14 @@ namespace NinjaTrader.NinjaScript.Strategies
 {
 	public partial class Strategy : NinjaTrader.Gui.NinjaScript.StrategyRenderBase
 	{
-		public Indicators.Customs.LodHod LodHod(Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth)
+		public Indicators.Customs.LodHod LodHod(Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth, bool showFrequencyMarket)
 		{
-			return indicator.LodHod(Input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth);
+			return indicator.LodHod(Input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth, showFrequencyMarket);
 		}
 
-		public Indicators.Customs.LodHod LodHod(ISeries<double> input , Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth)
+		public Indicators.Customs.LodHod LodHod(ISeries<double> input , Brush lodHorizontalLineColor, Brush hodHorizontalLineColor, DashStyleHelper lowHorizontalDashStyle, DashStyleHelper highHorizontalDashStyle, byte lowWidth, byte highWidth, bool showFrequencyMarket)
 		{
-			return indicator.LodHod(input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth);
+			return indicator.LodHod(input, lodHorizontalLineColor, hodHorizontalLineColor, lowHorizontalDashStyle, highHorizontalDashStyle, lowWidth, highWidth, showFrequencyMarket);
 		}
 	}
 }

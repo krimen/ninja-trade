@@ -8,9 +8,26 @@ namespace NinjaTrader.Custom.Indicators.Customs
 {
 	public abstract  class Gap
 	{
-        public Rect Box { get; set; }
-        public string Tag { get; set; }
-		public FillType State { get; set; }
+        public Rect Box 
+		{
+			get;
+			set;
+		}
+        public string Tag 
+		{
+			get;
+			set;
+		}
+		public FillType State 
+		{
+			get;
+			set;
+		}
+		public int NumberBar
+		{
+			get;
+			set;
+		}
 
 		public Gap(string tag, double lowerPrice, double upperPrice)
 		{

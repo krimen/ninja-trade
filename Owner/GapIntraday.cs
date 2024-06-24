@@ -118,7 +118,10 @@ namespace NinjaTrader.NinjaScript.Indicators.Customs
 						bool founded = indexGapOnTheList != -1;
 						if (founded)
 						{
-							gap.Box.UpperPrice = currentBar.Low;
+							if(currentBar.Low > gap.Box.LowerPrice) 
+							{
+								gap.Box.UpperPrice = currentBar.Low;
+							}
 							gap.State = Custom.Indicators.Customs.FillType.Negative;
 							gaps[indexGapOnTheList] = gap;
 						}
