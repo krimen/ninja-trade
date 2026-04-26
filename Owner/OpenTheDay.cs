@@ -24,114 +24,114 @@ using NinjaTrader.NinjaScript.DrawingTools;
 //This namespace holds Indicators in this folder and is required. Do not change it. 
 namespace NinjaTrader.NinjaScript.Indicators.Customs
 {
-	[Gui.CategoryOrder("HorizontalLine", 1)]
-	[Gui.CategoryOrder("Colors", 2)]
-	public class OpenTheDay : Indicator
-	{
-		protected override void OnStateChange()
-		{
-			if (State == State.SetDefaults)
-			{
-				Description									= @"Enter the description for your new custom Indicator here.";
-				Name										= "OpenTheDay";
-				Calculate									= Calculate.OnBarClose;
-				IsOverlay									= true;
-				DisplayInDataBox							= false;
-				DrawOnPricePanel							= false;
-				DrawHorizontalGridLines						= false;
-				DrawVerticalGridLines						= false;
-				PaintPriceMarkers							= false;
-				ScaleJustification							= NinjaTrader.Gui.Chart.ScaleJustification.Right;
-				//Disable this property if your indicator requires custom values that cumulate with each new market data event. 
-				//See Help Guide for additional information.
-				IsSuspendedWhileInactive					= true;
-				HorizontalLineColor 						= Brushes.CornflowerBlue;
-				HorizontalDashStyle							= DashStyleHelper.Solid;
-				PriceColor									= Brushes.Blue;
-				LabelColor									= Brushes.Black;
-				ShowLabelOpen 								= false; 
-			}
-			else if (State == State.Configure)
-			{
-				
-			}
-		}
+    [Gui.CategoryOrder("HorizontalLine", 1)]
+    [Gui.CategoryOrder("Colors", 2)]
+    public class OpenTheDay : Indicator
+    {
+        protected override void OnStateChange()
+        {
+            if (State == State.SetDefaults)
+            {
+                Description = @"Enter the description for your new custom Indicator here.";
+                Name = "OpenTheDay";
+                Calculate = Calculate.OnBarClose;
+                IsOverlay = true;
+                DisplayInDataBox = false;
+                DrawOnPricePanel = false;
+                DrawHorizontalGridLines = false;
+                DrawVerticalGridLines = false;
+                PaintPriceMarkers = false;
+                ScaleJustification = NinjaTrader.Gui.Chart.ScaleJustification.Right;
+                //Disable this property if your indicator requires custom values that cumulate with each new market data event. 
+                //See Help Guide for additional information.
+                IsSuspendedWhileInactive = true;
+                HorizontalLineColor = Brushes.CornflowerBlue;
+                HorizontalDashStyle = DashStyleHelper.Solid;
+                PriceColor = Brushes.Blue;
+                LabelColor = Brushes.Black;
+                ShowLabelOpen = false;
+            }
+            else if (State == State.Configure)
+            {
 
-		protected override void OnBarUpdate()
-		{
-			//Add your custom indicator logic here.
-			if (CurrentBar < 1) return;
-			
-			if(Bars.IsFirstBarOfSession)
-			{
-				NinjaTrader.Custom.Indicators.Customs.MyBar currentBar =
-					NinjaTrader.Custom.Indicators.Customs.FactoryBar.Create(Low[0], High[0], Close[0], Open[0]);
+            }
+        }
+
+        protected override void OnBarUpdate()
+        {
+            //Add your custom indicator logic here.
+            if (CurrentBar < 1) return;
+
+            if (Bars.IsFirstBarOfSession)
+            {
+                NinjaTrader.Custom.Indicators.Customs.MyBar currentBar =
+                    NinjaTrader.Custom.Indicators.Customs.FactoryBar.Create(Low[0], High[0], Close[0], Open[0]);
 
 
-				string openOfDay = currentBar.Open.ToString();
-				NinjaTrader.Gui.Tools.SimpleFont font = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 50) { Bold = true };
-				NinjaTrader.Gui.Tools.SimpleFont fontOpenText = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Bold = true };
-				//Draw.TextFixed(this, "OpenOfDayPrice", "Open = " + openOfDay, TextPosition.TopRight, PriceColor, font, Brushes.Transparent, Brushes.Transparent, 1);
-				
-				//Draw.HorizontalLine(this, "OpenOfDayLine", currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
-				Draw.Line(this, "OpenOfDayLine", false, 0, currentBar.Open, -100, currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
-				
-				if(ShowLabelOpen) 
-				{
-					//Draw.Text(this, "OpenOfDayLabel", true, "Open", -3, currentBar.Open, 10, LabelColor, fontOpenText, TextAlignment.Center, null, null, 1);
-					Draw.TextFixed(this, "OpenOfDayPrice", "Open = " + openOfDay, TextPosition.TopRight, PriceColor, font, Brushes.Transparent, Brushes.Transparent, 1);
-				}
-			}
-		}
-		
-		#region Properties
-		[NinjaScriptProperty]
-		[XmlIgnore]
-		[Display(Name="Show Label Open", Description = "Horizontal Line on the Open", Order=1, GroupName= "HorizontalLine")]
-		public bool ShowLabelOpen
-		{
-			get;
-			set; 
-		}
-		
-		[NinjaScriptProperty]
-		[XmlIgnore]
-		[Display(Name="Horizontal Line Color", Description = "Horizontal Line on the Open", Order=2, GroupName= "HorizontalLine")]
-		public Brush HorizontalLineColor
-		{
-			get;
-			set; 
-		}
+                string openOfDay = currentBar.Open.ToString();
+                NinjaTrader.Gui.Tools.SimpleFont font = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 50) { Bold = true };
+                NinjaTrader.Gui.Tools.SimpleFont fontOpenText = new NinjaTrader.Gui.Tools.SimpleFont("Courier New", 14) { Bold = true };
+                //Draw.TextFixed(this, "OpenOfDayPrice", "Open = " + openOfDay, TextPosition.TopRight, PriceColor, font, Brushes.Transparent, Brushes.Transparent, 1);
 
-		[NinjaScriptProperty]
-		[Display(Name = "Dash Style", Description = "Style used by line horizontal", Order = 3, GroupName = "HorizontalLine")]
-		public DashStyleHelper HorizontalDashStyle
-		{
-			get;
-			set;
-		}
+                //Draw.HorizontalLine(this, "OpenOfDayLine", currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
+                Draw.Line(this, "OpenOfDayLine", false, 0, currentBar.Open, -100, currentBar.Open, HorizontalLineColor, HorizontalDashStyle, 1);
 
-		[NinjaScriptProperty]
-		[XmlIgnore]
-		[Display(Name = "Price the Open Color", Description = "Value the open color", Order = 4, GroupName = "Colors")]
-		public Brush PriceColor
-		{
-			get;
-			set;
-		}
+                if (ShowLabelOpen)
+                {
+                    //Draw.Text(this, "OpenOfDayLabel", true, "Open", -3, currentBar.Open, 10, LabelColor, fontOpenText, TextAlignment.Center, null, null, 1);
+                    Draw.TextFixed(this, "OpenOfDayPrice", "Open = " + openOfDay, TextPosition.TopRight, PriceColor, font, Brushes.Transparent, Brushes.Transparent, 1);
+                }
+            }
+        }
 
-		[NinjaScriptProperty]
-		[XmlIgnore]
-		[Display(Name = "Label Color Open", Description = "Color of label on Open", Order = 5, GroupName = "Colors")]
-		public Brush LabelColor
-		{
-			get;
-			set;
-		}
-		
+        #region Properties
+        [NinjaScriptProperty]
+        [XmlIgnore]
+        [Display(Name = "Show Label Open", Description = "Horizontal Line on the Open", Order = 1, GroupName = "HorizontalLine")]
+        public bool ShowLabelOpen
+        {
+            get;
+            set;
+        }
 
-		#endregion
-	}
+        [NinjaScriptProperty]
+        [XmlIgnore]
+        [Display(Name = "Horizontal Line Color", Description = "Horizontal Line on the Open", Order = 2, GroupName = "HorizontalLine")]
+        public Brush HorizontalLineColor
+        {
+            get;
+            set;
+        }
+
+        [NinjaScriptProperty]
+        [Display(Name = "Dash Style", Description = "Style used by line horizontal", Order = 3, GroupName = "HorizontalLine")]
+        public DashStyleHelper HorizontalDashStyle
+        {
+            get;
+            set;
+        }
+
+        [NinjaScriptProperty]
+        [XmlIgnore]
+        [Display(Name = "Price the Open Color", Description = "Value the open color", Order = 4, GroupName = "Colors")]
+        public Brush PriceColor
+        {
+            get;
+            set;
+        }
+
+        [NinjaScriptProperty]
+        [XmlIgnore]
+        [Display(Name = "Label Color Open", Description = "Color of label on Open", Order = 5, GroupName = "Colors")]
+        public Brush LabelColor
+        {
+            get;
+            set;
+        }
+
+
+        #endregion
+    }
 }
 
 #region NinjaScript generated code. Neither change nor remove.

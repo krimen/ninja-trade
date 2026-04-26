@@ -9,7 +9,7 @@ namespace NinjaTrader.Custom.Indicators.Customs
 {
     public class BearGap : Gap
     {
-        public BearGap(string tag, double lowerPrice, double upperPrice ) :
+        public BearGap(string tag, double lowerPrice, double upperPrice) :
             base(tag, lowerPrice, upperPrice)
         {
 

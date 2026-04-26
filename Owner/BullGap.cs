@@ -34,5 +34,3 @@ namespace NinjaTrader.Custom.Indicators.Customs
         }
     }
 }
-
-

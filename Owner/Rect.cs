@@ -9,22 +9,22 @@ namespace NinjaTrader.Custom.Indicators.Customs
 {
     public class Rect
     {
-        public int Width 
+        public int Width
         {
             get;
             set;
         }
-        public Brush BorderColor 
+        public Brush BorderColor
         {
             get;
             set;
         }
-        public Brush BackgroundColor 
+        public Brush BackgroundColor
         {
             get;
             set;
         }
-        public byte Opacity 
+        public byte Opacity
         {
             get;
             set;
@@ -38,18 +38,15 @@ namespace NinjaTrader.Custom.Indicators.Customs
             }
         }
 
-        public double UpperPrice 
+        public double UpperPrice
         {
             get;
             set;
         }
-        public double LowerPrice 
+        public double LowerPrice
         {
             get;
             set;
         }
     }
 }
-
-
-
